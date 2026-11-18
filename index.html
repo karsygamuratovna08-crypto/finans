@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Мои финансы</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Nunito:wght@400;600;800&display=swap">
+<style>
+:root{--sky1:#0d1750;--sky2:#2b3a9e;--sky3:#7a4fc4;--gold:#f7c948;--gold2:#ffe58a;--pink:#ff7eb6;--ink:#1b2260;--mute:#5d659c;--card:rgba(255,255,255,.95);--line:#dde1f5;--inc:#12906f;--exp:#d6336c;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;color:var(--ink);font:400 16px/1.45 Nunito,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#0d1750 linear-gradient(180deg,var(--sky1) 0,var(--sky2) 420px,var(--sky3) 900px,#b86bc4 100%);background-attachment:fixed}
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+.stars i{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--gold2);box-shadow:0 0 6px var(--gold);animation:tw 3.2s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.25}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.stars i{animation:none;opacity:.7}}
+.wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 16px 56px}
+.top{text-align:center;color:#fff;padding-top:8px}
+.top svg{width:min(340px,80%);height:auto;display:block;margin:0 auto}
+h1{font-family:"Marck Script",cursive;font-weight:400;font-size:clamp(40px,11vw,64px);margin:0;line-height:1;color:var(--gold);text-shadow:0 2px 14px rgba(247,201,72,.45)}
+.sub{margin:6px 0 0;color:#dfe3ff}
+.card{background:var(--card);border-radius:22px;padding:18px;margin-top:18px;box-shadow:0 10px 30px rgba(8,12,60,.35);border:2px solid var(--gold)}
+h2{font-family:"Marck Script",cursive;font-weight:400;font-size:28px;margin:0 0 10px;color:var(--ink)}
+.mon{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+input,select,button{font:inherit;color:var(--ink)}
+input,select{background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;min-width:0}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--pink);outline-offset:1px}
+.mon input{width:auto}
+.bal{font-size:clamp(34px,9vw,52px);font-weight:800;line-height:1.1;margin:2px 0 12px;font-variant-numeric:tabular-nums}
+.bal.neg{color:var(--exp)}
+.split{display:flex;height:12px;border-radius:8px;overflow:hidden;background:var(--line)}
+.split i{display:block;transition:width .4s}
+.split .a{background:var(--inc)}.split .b{background:var(--exp)}
+.io{display:flex;justify-content:space-between;margin-top:12px;gap:12px}
+.io b{display:block;font-size:19px;font-variant-numeric:tabular-nums}
+.io .r{text-align:right}
+.lbl{color:var(--mute);font-size:14px}
+.inc{color:var(--inc)}.exp{color:var(--exp)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--line);padding:4px;border-radius:14px;margin-bottom:10px}
+.seg button{border:0;background:transparent;padding:10px;border-radius:11px;cursor:pointer;font-weight:800;color:var(--mute)}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(27,34,96,.18)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.newcat{display:flex;gap:8px;margin-bottom:10px}
+.btn{border:0;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;background:linear-gradient(180deg,var(--gold2),var(--gold));color:var(--ink);box-shadow:0 3px 0 #c9971a}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #c9971a}
+.btn.wide{width:100%}
+.btn.ghost{background:#fff;box-shadow:none;border:2px solid var(--line);color:var(--mute);font-weight:600;padding:8px 12px}
+.err{color:var(--exp);min-height:20px;margin:0 0 6px;font-size:14px}
+.cat{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;padding:5px 0;font-size:15px}
+.bar{height:9px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:6px;background:var(--exp)}
+.bar.g i{background:var(--inc)}
+.tx{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+.tx:first-child{border-top:0}
+.tx .m{flex:1;min-width:0}
+.tx .m span{display:block;color:var(--mute);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx .s{font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.del{border:0;background:transparent;color:var(--mute);cursor:pointer;font-size:22px;line-height:1;padding:6px 9px;border-radius:10px}
+.del:hover{color:var(--exp);background:#fde7f0}
+.empty{color:var(--mute);padding:10px 0}
+.foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+dialog{border:3px solid var(--gold);border-radius:24px;padding:20px;max-width:520px;width:calc(100% - 32px);background:#fff;color:var(--ink);max-height:86vh;overflow:auto}
+dialog::backdrop{background:rgba(13,23,80,.7)}
+.rhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.rhead input{width:auto}
+.sum{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0;text-align:center}
+.sum div{background:#f3f4fd;border-radius:14px;padding:10px 4px}
+.sum b{display:block;font-size:15px;font-variant-numeric:tabular-nums}
+h3{font-size:15px;margin:14px 0 4px}
+</style>
+</head>
+<body>
+<div class="stars" id="stars" aria-hidden="true"></div>
+<div class="wrap">
+  <div class="top">
+    <svg viewBox="0 0 340 170" aria-hidden="true">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe58a"/><stop offset="1" stop-color="#f0b429"/></linearGradient></defs>
+      <g fill="url(#g)">
+        <rect x="140" y="70" width="60" height="100"/>
+        <rect x="60" y="100" width="46" height="70"/><rect x="234" y="100" width="46" height="70"/>
+        <rect x="20" y="124" width="36" height="46"/><rect x="284" y="124" width="36" height="46"/>
+        <rect x="110" y="110" width="30" height="60"/><rect x="200" y="110" width="30" height="60"/>
+        <path d="M130 70 L170 8 L210 70Z"/>
+        <path d="M54 100 L83 44 L112 100Z"/><path d="M228 100 L257 44 L286 100Z"/>
+        <path d="M14 124 L38 84 L62 124Z"/><path d="M278 124 L302 84 L326 124Z"/>
+        <path d="M110 110 L125 84 L140 110Z"/><path d="M200 110 L215 84 L230 110Z"/>
+      </g>
+      <path d="M156 170 V140 a14 14 0 0 1 28 0 V170Z" fill="#1b2260"/>
+      <g fill="#1b2260"><rect x="76" y="124" width="14" height="20" rx="7"/><rect x="250" y="124" width="14" height="20" rx="7"/><rect x="163" y="92" width="14" height="22" rx="7"/></g>
+      <g fill="#fff"><path d="M170 8 V-6" stroke="#ffe58a" stroke-width="2"/></g>
+    </svg>
+    <h1>Мои финансы</h1>
+    <p class="sub">Волшебный учёт доходов и расходов</p>
+  </div>
+
+  <div class="card">
+    <div class="mon"><span class="lbl">Баланс за месяц</span><input type="month" id="month" aria-label="Месяц"></div>
+    <div class="bal" id="bal">0 ₸</div>
+    <div class="split"><i class="a" id="ba" style="width:0"></i><i class="b" id="bb" style="width:0"></i></div>
+    <div class="io">
+      <div><span class="lbl">Доходы</span><b class="inc" id="inc">0 ₸</b></div>
+      <div class="r"><span class="lbl">Расходы</span><b class="exp" id="exp">0 ₸</b></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Новая запись</h2>
+    <div class="seg" role="group" aria-label="Тип записи">
+      <button type="button" id="tE" aria-pressed="true">Расход</button>
+      <button type="button" id="tI" aria-pressed="false">Доход</button>
+    </div>
+    <div class="grid">
+      <input id="amt" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Сумма, ₸" aria-label="Сумма в тенге">
+      <select id="catSel" aria-label="Категория"></select>
+    </div>
+    <div class="grid">
+      <input id="date" type="date" aria-label="Дата">
+      <input id="note" type="text" maxlength="60" placeholder="Заметка (необязательно)" aria-label="Заметка">
+    </div>
+    <div class="newcat">
+      <input id="newCat" type="text" maxlength="24" placeholder="Своя категория" aria-label="Название новой категории">
+      <button class="btn ghost" id="addCat" type="button">Добавить категорию</button>
+    </div>
+    <p class="err" id="err" role="alert"></p>
+    <button class="btn wide" id="add" type="button">Добавить запись</button>
+  </div>
+
+  <div class="card">
+    <h2>Расходы по категориям</h2>
+    <div id="cats"></div>
+  </div>
+
+  <div class="card">
+    <h2>Записи за месяц</h2>
+    <div id="list"></div>
+    <div class="foot">
+      <button class="btn" id="rep" type="button">Отчёт за день</button>
+      <button class="btn ghost" id="clear" type="button">Удалить все данные</button>
+    </div>
+  </div>
+</div>
+
+<dialog id="dlg" aria-label="Отчёт за день">
+  <div class="rhead"><h2 style="margin:0">Отчёт за день</h2><input type="date" id="rdate" aria-label="Дата отчёта"></div>
+  <div id="rbody"></div>
+  <div class="foot"><button class="btn" id="close" type="button">Закрыть</button></div>
+</dialog>
+
+<script>
+(function(){
+var DEF={E:["Продукты","Жильё","Транспорт","Кафе","Здоровье","Развлечения","Одежда","Связь","Другое"],I:["Зарплата","Подработка","Подарки","Другое"]};
+var KEY="moi-finansy-disney-v1";
+var S={tx:[],cats:{E:DEF.E.slice(),I:DEF.I.slice()}};
+var type="E";
+function $(i){return document.getElementById(i)}
+function load(){try{var r=localStorage.getItem(KEY);if(r){var d=JSON.parse(r);if(d&&Array.isArray(d.tx)&&d.cats&&d.cats.E&&d.cats.I)S=d}}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(n){return new Intl.NumberFormat("ru-RU",{maximumFractionDigits:2}).format(n)+" ₸"}
+function today(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function ddmm(d){return d.slice(8,10)+"."+d.slice(5,7)}
+function fillCats(sel){$("catSel").innerHTML=S.cats[type].map(function(c){return"<option>"+esc(c)+"</option>"}).join("");if(sel)$("catSel").value=sel}
+function setType(t){type=t;$("tE").setAttribute("aria-pressed",t==="E");$("tI").setAttribute("aria-pressed",t==="I");fillCats()}
+function totals(arr){var inc=0,exp=0,e={},i={};arr.forEach(function(t){if(t.t==="I"){inc+=t.a;i[t.c]=(i[t.c]||0)+t.a}else{exp+=t.a;e[t.c]=(e[t.c]||0)+t.a}});return{inc:inc,exp:exp,e:e,i:i}}
+function rows(arr){return arr.map(function(t){return'<div class="tx"><div class="m"><b>'+esc(t.c)+'</b><span>'+ddmm(t.d)+(t.n?" · "+esc(t.n):"")+'</span></div><div class="s '+(t.t==="I"?"inc":"exp")+'">'+(t.t==="I"?"+":"−")+fmt(t.a)+'</div><button class="del" data-id="'+t.id+'" aria-label="Удалить запись">×</button></div>'}).join("")}
+function bars(map,total,cls){var k=Object.keys(map).sort(function(a,b){return map[b]-map[a]});return k.length?k.map(function(c){return'<div class="cat"><span>'+esc(c)+'</span><div class="bar '+cls+'"><i style="width:'+(map[c]/total*100)+'%"></i></div><span>'+fmt(map[c])+'</span></div>'}).join(""):""}
+function render(){
+  var m=$("month").value;
+  var cur=S.tx.filter(function(t){return t.d.slice(0,7)===m}).sort(function(a,b){return b.d.localeCompare(a.d)||b.id-a.id});
+  var T=totals(cur),bal=T.inc-T.exp,tot=T.inc+T.exp;
+  $("bal").textContent=(bal<0?"−":"")+fmt(Math.abs(bal));
+  $("bal").className="bal"+(bal<0?" neg":"");
+  $("inc").textContent=fmt(T.inc);$("exp").textContent=fmt(T.exp);
+  $("ba").style.width=tot?(T.inc/tot*100)+"%":"0";
+  $("bb").style.width=tot?(T.exp/tot*100)+"%":"0";
+  $("cats").innerHTML=bars(T.e,T.exp,"")||'<div class="empty">В этом месяце расходов пока нет.</div>';
+  $("list").innerHTML=cur.length?rows(cur):'<div class="empty">Добавьте первую запись выше.</div>';
+  if($("dlg").open)report();
+}
+function report(){
+  var d=$("rdate").value||today();
+  var day=S.tx.filter(function(t){return t.d===d}).sort(function(a,b){return b.id-a.id});
+  var T=totals(day),bal=T.inc-T.exp;
+  var h='<div class="sum"><div><span class="lbl">Доходы</span><b class="inc">'+fmt(T.inc)+'</b></div><div><span class="lbl">Расходы</span><b class="exp">'+fmt(T.exp)+'</b></div><div><span class="lbl">Итог</span><b class="'+(bal<0?"exp":"inc")+'">'+(bal<0?"−":"")+fmt(Math.abs(bal))+'</b></div></div>';
+  if(!day.length){h+='<div class="empty">За этот день записей нет.</div>'}
+  else{
+    if(T.exp)h+='<h3>Расходы по категориям</h3>'+bars(T.e,T.exp,"");
+    if(T.inc)h+='<h3>Доходы по категориям</h3>'+bars(T.i,T.inc,"g");
+    h+='<h3>Все записи</h3>'+rows(day);
+  }
+  $("rbody").innerHTML=h;
+}
+$("tE").onclick=function(){setType("E")};
+$("tI").onclick=function(){setType("I")};
+$("addCat").onclick=function(){
+  var v=$("newCat").value.trim();
+  if(!v){$("err").textContent="Введите название категории.";$("newCat").focus();return}
+  var low=S.cats[type].map(function(x){return x.toLowerCase()});
+  if(low.indexOf(v.toLowerCase())<0)S.cats[type].push(v);
+  $("newCat").value="";$("err").textContent="";save();fillCats(v);
+};
+$("add").onclick=function(){
+  var a=parseFloat($("amt").value);
+  if(!(a>0)){$("err").textContent="Введите сумму больше нуля.";$("amt").focus();return}
+  var d=$("date").value||today();
+  S.tx.push({id:Date.now(),t:type,a:a,c:$("catSel").value,d:d,n:$("note").value.trim()});
+  $("err").textContent="";$("amt").value="";$("note").value="";
+  $("month").value=d.slice(0,7);
+  save();render();
+};
+$("amt").addEventListener("keydown",function(e){if(e.key==="Enter")$("add").click()});
+function del(e){
+  var b=e.target.closest(".del");if(!b)return;
+  var id=+b.getAttribute("data-id");
+  S.tx=S.tx.filter(function(t){return t.id!==id});save();render();
+}
+$("list").onclick=del;$("rbody").onclick=del;
+$("month").onchange=render;
+$("rep").onclick=function(){$("rdate").value=$("date").value||today();report();$("dlg").showModal()};
+$("rdate").onchange=report;
+$("close").onclick=function(){$("dlg").close()};
+$("clear").onclick=function(){
+  var b=$("clear");
+  if(b.dataset.sure){S.tx=[];save();render();b.textContent="Удалить все данные";delete b.dataset.sure;return}
+  b.dataset.sure=1;b.textContent="Нажмите ещё раз для подтверждения";
+  setTimeout(function(){b.textContent="Удалить все данные";delete b.dataset.sure},4000);
+};
+(function(){var s="";for(var i=0;i<38;i++){s+='<i style="left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;animation-delay:'+(Math.random()*3).toFixed(2)+'s"></i>'}$("stars").innerHTML=s})();
+load();
+$("date").value=today();$("month").value=today().slice(0,7);
+fillCats();render();
+})();
+</script>
+</body>
+</html>
